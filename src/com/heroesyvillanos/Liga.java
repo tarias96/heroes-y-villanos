@@ -25,7 +25,7 @@ public class Liga implements Competidor {
 	}
 	
 	// Getters y Setters
-	public String getNombreLiga() {
+	public String getNombre() {
 		return nombreLiga;
 	}
 	
@@ -40,4 +40,26 @@ public class Liga implements Competidor {
 	public void setCompetidores(List<Competidor> competidores) {
 		this.competidores = competidores;
 	}
+	
+	public boolean isTipoCompetidor() {
+		return tipoCompetidor;
+	}
+	
+	public Liga(String nombreLiga, List<Competidor> competidores, boolean tipoCompetidor) {
+		super();
+		this.nombreLiga = nombreLiga;
+		this.competidores = competidores;
+		this.tipoCompetidor = tipoCompetidor;
+	}
+
+	public String toFileLine() {
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.nombreLiga);
+		for ( Competidor c : competidores) {
+			sb.append(", " + c.getNombre());
+		}
+		return sb.toString();
+	}
+	
 }
