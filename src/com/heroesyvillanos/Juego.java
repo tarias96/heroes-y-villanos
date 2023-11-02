@@ -286,7 +286,7 @@ public class Juego {
 			}
 		} else {
 			throw new Exception("La lista de personajes está vacía."); 
-		}
+		}		
 	}
 	
 	// ========== FIN MENU PERSONAJES ==========
@@ -315,12 +315,11 @@ public class Juego {
                 	try {
                 		this.ligas = cargarLigasDesdeArchivo(this.personajes, "src/ligas.in");
             		}catch (FileNotFoundException e) {
-            			// manejor del error. yo devuelvo una excepcion, este por si no esta el archivo 
+            			// Manejo del error. yo devuelvo una excepcion, este por si no esta el archivo 
             		}catch (IOException e) {
             			// Este por si falla la lectura del archvo  
             		}
-            
-                    break;
+                	break;
                 case 2:
                     crearLiga();
                     break;
@@ -341,11 +340,11 @@ public class Juego {
                     break;
                 case 5:
                 	scanner.nextLine();
-                	agregaCompetidorALiga(1);//agrega personaje
+                	agregaCompetidorALiga(1); // Agrega personaje
                     break;
                 case 6:
                 	scanner.nextLine();
-                	agregaCompetidorALiga(2);//agrega Liga
+                	agregaCompetidorALiga(2); // Agrega Liga
                     break;
                 case 7:
                     seguir = false;
@@ -598,7 +597,7 @@ public class Juego {
 	
 	// ========== INICIO MENU COMBATES ==========
 
-	private void menuCombates() {
+    private void menuCombates() {
         boolean seguir = true;
 
         while (seguir) {
@@ -626,24 +625,22 @@ public class Juego {
             }
         }
     }
-	
+
     public void realizarCombateMenu() {
     	try {
     		System.out.println("");
     		System.out.println("Elegir primer competidor:");
         	Competidor comp1 = seleccionarCompetidor();
-        	
         	System.out.println("");
     		System.out.println("Elegir segundo competidor:");
         	Competidor comp2 = seleccionarCompetidor();
-        	
         	Caracteristica car = seleccionarCaracteristica();
         	combatir(comp1, comp2, car);
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println(e.getMessage());
 			System.out.println("Regresando al menú de combates");
-		}	
+		}
     }
     
     public Competidor seleccionarCompetidor() throws Exception {
@@ -810,3 +807,4 @@ public class Juego {
 	
 	// ========== FIN MENU REPORTES ==========
 }
+
