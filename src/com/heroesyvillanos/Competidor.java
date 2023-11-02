@@ -47,5 +47,4 @@ public abstract class Competidor {
 		
 		return result;
 	}
-	protected abstract String getNombre();
 }

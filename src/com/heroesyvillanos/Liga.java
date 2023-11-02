@@ -103,8 +103,13 @@ public class Liga extends Competidor {
 		return nombreLiga;
 	}
 	
-	public void setNombreLiga(String nombreLiga) {
-		this.nombreLiga = nombreLiga;
+	@Override
+	protected int getCantidadCompetidores() {
+		int sum = 0;
+		for(Competidor comp : competidores) {
+			sum += comp.getCantidadCompetidores();
+		}
+		return sum;
 	}
 	
 	public void setCompetidores(List<Competidor> competidores) {

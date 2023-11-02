@@ -808,5 +808,5 @@ public class Juego {
 		// Devuelve lista de personajes ordenada por las caracteristicas especificadas.
 	}
 	
-	// ========== INICIO MENU REPORTES ==========
+	// ========== FIN MENU REPORTES ==========
 }
