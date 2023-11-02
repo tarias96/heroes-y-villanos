@@ -1,10 +1,13 @@
 package com.heroesyvillanos;
+
+import java.util.Comparator;
 import java.util.Map;
 
 public class Personaje extends Competidor {
 	private String nombre;
 	private String nombreFantasia;
 	private Map<Caracteristica, Integer> caracteristicas;
+	private static Ordenamiento orden = new Ordenamiento(); //convertir en singleton? Esta bien que cada competidor tenga un orden?
 	
 	Personaje(String nombre, String nombreFantasia, Map<Caracteristica, Integer> caracteristicas, TipoCompetidor tipo) throws IllegalArgumentException{
 		if(!esNombreValido(nombre)) {
@@ -33,10 +36,6 @@ public class Personaje extends Competidor {
 
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
-		this.nombreFantasia = nombreFantasia;
-		this.caracteristicas = caracteristicas;
-		estaDentroDeLiga = false;
-		
 	}
 	
 	// Getters y Setters -> nombreFantasia

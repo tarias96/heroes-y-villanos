@@ -8,7 +8,6 @@ import java.util.Map;
 public class Liga extends Competidor {
 	private String nombreLiga;
 	private List<Competidor> competidores; // puede contener personajes y ligas
-	protected TipoCompetidor tipoCompetidor;
 	private Map<Caracteristica, Integer> cache_promedio_caracteristicas;
 	
 	// Constructor
