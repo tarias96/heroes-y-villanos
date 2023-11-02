@@ -103,15 +103,6 @@ public class Liga extends Competidor {
 		return nombreLiga;
 	}
 	
-	@Override
-	protected int getCantidadCompetidores() {
-		int sum = 0;
-		for(Competidor comp : competidores) {
-			sum += comp.getCantidadCompetidores();
-		}
-		return sum;
-	}
-	
 	public void setCompetidores(List<Competidor> competidores) {
 		this.competidores = competidores;
 	}
@@ -120,12 +111,13 @@ public class Liga extends Competidor {
 		return tipoCompetidor;
 	}
 
+	// VER -> metodo getNombre
 	public String toFileLine() {
 		StringBuilder sb = new StringBuilder();
 		sb.append(this.nombreLiga);
-		for (Competidor c : competidores) {
-			sb.append(", " + c.getNombre());
-		}
+//		for (Competidor c : competidores) {
+//			sb.append(", " + c.getNombre());
+//		}
 		return sb.toString();
 	}
 	
