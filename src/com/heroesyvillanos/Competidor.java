@@ -1,8 +1,9 @@
 package com.heroesyvillanos;
 
-public abstract class Competidor {
+public abstract class Competidor implements Comparable<Competidor> {
 	protected TipoCompetidor tipoCompetidor;
 	protected boolean estaDentroDeLiga;
+	private static Ordenamiento orden = new Ordenamiento(); //convertir en singleton? Esta bien que cada competidor tenga un orden?
 	
 	abstract protected int getPromedioCaracteristica(Caracteristica c);
 	abstract protected int getSumaCaracteristica(Caracteristica c);
@@ -46,5 +47,19 @@ public abstract class Competidor {
 		}
 		
 		return result;
+	}
+	
+	public int compareTo(Competidor c) {
+		int resultado = 0;
+		
+		for (Caracteristica caracteristicaDeComparacion : orden.ordenCaracteristicas) {
+			resultado =
+				this.getPromedioCaracteristica(caracteristicaDeComparacion) -
+				c.getPromedioCaracteristica(caracteristicaDeComparacion);
+			if (resultado != 0) {
+				break;
+			}
+		}
+		return resultado;
 	}
 }
