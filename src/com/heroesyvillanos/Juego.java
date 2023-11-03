@@ -11,11 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.EnumMap;
+import java.util.LinkedList;
+import java.util.Collections;
 
 public class Juego {
 	private List<Personaje> personajes = new ArrayList<Personaje>();
 	private List<Liga> ligas = new ArrayList<Liga>();
-	private Ordenamiento ordenamiento;
     private Scanner scanner = new Scanner(System.in);
     
     public void mostrarMenu() throws Exception {
@@ -758,7 +760,7 @@ public class Juego {
 
 	// ========== INICIO MENU REPORTES ==========
 
-    private void menuReportes() {
+    private void menuReportes() throws Exception {
         boolean seguir = true;
 
         while (seguir) {
@@ -773,12 +775,12 @@ public class Juego {
 
             switch (seleccion) {
                 case 1:
-                    obtenerVencedoresContra();
+                	menuObtenerVencedoresContra();
                     break;
                 case 2:
-                    // TO DO: seleccionar las características por las que quieres ordenar
                     List<Caracteristica> criterios = seleccionarCriteriosOrdenamiento();
-                    listadoOrdenadoPorCaracteristica(criterios);
+                    boolean ascendente = seleccionarAscendente();
+                    listadoOrdenadoPorCaracteristica(criterios, ascendente);
                     break;
                 case 3:
                     seguir = false;
@@ -789,20 +791,186 @@ public class Juego {
         }
     }
     
-	public void obtenerVencedoresContra() {
-        System.out.println("");
-		// Toma un competidor y una caracteristica, obtiene lista de competidores que vencerian a un competidor basandose en una caracteristica
-		System.out.println("Obtiene listado de personajes o ligas que vencen a un personaje dado");
+    /**
+	* Toma un competidor y una caracteristica,
+	* obtiene lista de competidores que vencerian a un
+	* competidor basandose en una caracteristica
+     * @throws Exception 
+	*/
+	private void menuObtenerVencedoresContra() throws Exception {
+		Caracteristica caracteristicaEvaluativa;
+		List<Caracteristica> caracteristicas;
+		Personaje personajeAEvaluar;
+		
+    	personajeAEvaluar = menuSeleccionarPersonaje();
+    	if (personajeAEvaluar == null) {
+    		menuReportes();
+    		return;
+    	}
+    	
+    	caracteristicas = menuSeleccionarCaracteristica(null);
+    	if (caracteristicas.isEmpty()) {
+    		menuReportes();
+    		return;
+    	}
+    	else {
+    		caracteristicaEvaluativa = caracteristicas.get(0);
+    	}
+		
+		System.out.println("Vencedores:");
+		System.out.println(obtenerVencedoresContra(personajeAEvaluar, caracteristicaEvaluativa));
+    }
+	
+    private Personaje menuSeleccionarPersonaje() throws Exception {
+    	Personaje personajeAEvaluar = null;
+    	String entradaUsuario;
+    	
+    	System.out.println("Seleccione un personaje de la siguiente lista o ingrese 0 para salir:");
+		listarPersonajes();
+		while (personajeAEvaluar == null) {
+			entradaUsuario = scanner.nextLine();
+			if (entradaUsuario.equals("0")) return null;
+			
+			personajeAEvaluar = obtenerPersonajePorNombreFantasia(entradaUsuario);			
+			if (personajeAEvaluar == null) {
+				System.out.println("El personaje ingresado no existe.");
+			}
+		}
+		return personajeAEvaluar;
+    }
+    
+    private Personaje obtenerPersonajePorNombreFantasia(String nombre) {
+    	if (personajes == null) return null;
+    	for (Personaje personaje : personajes) {
+    		if (personaje.getNombreFantasia() == nombre) {
+    			return personaje;
+    		}
+    	}
+    	return null;
+    }
+    
+	private List<Competidor> obtenerVencedoresContra(Competidor retador, Caracteristica caracteristica) {
+		List<Competidor> contrincantes = new ArrayList<Competidor>();
+		List<Competidor> vencedores = new ArrayList<Competidor>();
+		
+		contrincantes.addAll(ligas);
+		contrincantes.addAll(personajes);
+
+		// VER -> Ver esta logiva de contrincante.esGanador. antes retornaba un boolean, ahora un int. Creo que si es negativo es que no es ganador, pero no se como se implemento.
+		// Agrego la condicion de que sea > 0 para considerarlo ganador, por ahi hay que modificar esta logica, lo agrego para que compile.
+		for (Competidor contrincante : contrincantes) {
+			if (contrincante.esGanador(retador, caracteristica) > 0) {
+				vencedores.add(contrincante);
+			}
+		}
+		return vencedores;
 	}
 	
 	private List<Caracteristica> seleccionarCriteriosOrdenamiento() {
-        System.out.println("");
-		System.out.println("Obtiene listado ordenado de personajes por caracteristicas...");
-		return null;
+		//Se puede utilizar la clase ordenamiento? Vale la pena hacer una clase especifica para la lista de criterios?
+		List<Caracteristica> criterios = new LinkedList<Caracteristica>();
+		
+		criterios = menuSeleccionarCaracteristica(criterios); //si se pasa por referencia, no hace falta el "criterios =" ?
+		if (criterios.isEmpty()) {
+			return criterios;
+		}
+		criterios = menuAgregarCaracteristica(criterios); //si se pasa por referencia, no hace falta el "criterios =" ?
+		return criterios;
 	}
 	
-	public void listadoOrdenadoPorCaracteristica(List<Caracteristica> criterios) {
-		// Devuelve lista de personajes ordenada por las caracteristicas especificadas.
+	private List<Caracteristica> menuSeleccionarCaracteristica(List<Caracteristica> criterios) {
+    	Caracteristica caracteristicaEvaluativa = null;
+    	int entradaUsuario;
+    	
+    	if (criterios == null) {
+    		criterios = new LinkedList<Caracteristica>();
+    	}
+    	
+    	System.out.println("Seleccione una caracteristica o ingrese 0 para salir:");
+		listarCaracteristicas();
+		while (caracteristicaEvaluativa == null) {
+			entradaUsuario = scanner.nextInt();
+			if (entradaUsuario == 0) return criterios;
+			
+			//Ver si se puede quitar el hardcode utilizando el mismo EnumMap (o hacer otro?)
+			switch (entradaUsuario) {
+				case 1:
+					caracteristicaEvaluativa = Caracteristica.VELOCIDAD;
+					break;
+				case 2:
+					caracteristicaEvaluativa = Caracteristica.FUERZA;
+					break;
+				case 3:
+					caracteristicaEvaluativa = Caracteristica.RESISTENCIA;
+					break;
+				case 4:
+					caracteristicaEvaluativa = Caracteristica.DESTREZA;
+					break;
+				default: System.out.println("La caracteristica seleccionada no existe.");
+			}
+			if (criterios.indexOf(caracteristicaEvaluativa) >= 0) {
+				System.out.println("La característica seleccionada ya fue seleccionada previamente. No pueden repetirse.");
+				caracteristicaEvaluativa = null;
+			}
+			else {
+				criterios.add(caracteristicaEvaluativa);
+			}
+		}
+		return criterios;
+    }
+    
+	private List<Caracteristica> menuAgregarCaracteristica (List<Caracteristica> criterios) {
+		final String mensaje = "Ingrese 1 para agregar una nueva característica o 0 para salir:";
+		boolean agregarCaracteristica = true;
+		int entradaUsuario;
+		
+		while(agregarCaracteristica) {
+			System.out.println(mensaje);
+			entradaUsuario = scanner.nextInt();
+			switch (entradaUsuario) {
+				case 0: {
+					agregarCaracteristica = false;
+					return criterios;
+				}
+				case 1: criterios = menuSeleccionarCaracteristica(criterios);
+					break;
+				default: System.out.println(mensaje);
+			}
+		}
+		
+		return criterios;
+	}
+	
+	private boolean seleccionarAscendente() {
+		while(true) {
+			System.out.println("Ingrese 1 para mostrar en orden ascendente, 0 para orden descendente:");
+			switch (scanner.nextInt()) {
+				case 0: return false;
+				case 1: return true;
+				default: System.out.println("El valor ingresado no es válido. Intente nuevamente.");
+			}
+		}
+	}
+	
+	public void listadoOrdenadoPorCaracteristica(List<Caracteristica> criterios, boolean ascendente) {
+		if (criterios == null || criterios.isEmpty()) {
+			System.out.println("No se estableció un orden específico de características. Se utilizará el orden por defecto.");
+			criterios = new LinkedList<Caracteristica>();
+			criterios.addAll(new Ordenamiento().ordenCaracteristicas);
+		}
+		List<Competidor> personajesOrdenados = new ArrayList<Competidor>();
+		Ordenamiento orden = new Ordenamiento();
+		orden.setearOrdenCaracteristicas(criterios);
+		
+		if (personajes == null || personajes.isEmpty()) {
+			return;
+		}
+		personajesOrdenados.addAll(personajes);
+		Collections.sort(personajesOrdenados, orden);
+		if (ascendente) { //probar si es así o al revés
+			Collections.reverse(personajesOrdenados);
+		}
+		System.out.println(personajesOrdenados);
 	}
 	
 	// ========== FIN MENU REPORTES ==========

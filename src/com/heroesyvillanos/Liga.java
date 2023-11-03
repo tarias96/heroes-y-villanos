@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Liga extends Competidor {
+public class Liga extends Competidor implements Comparable<Competidor> {
 	private String nombreLiga;
 	private List<Competidor> competidores; // puede contener personajes y ligas
 	private Map<Caracteristica, Integer> cache_promedio_caracteristicas;
@@ -93,10 +93,6 @@ public class Liga extends Competidor {
 		return nombreLiga;
 	}
 	
-	public void agregarCompetidorALiga() {
-		// Agrega personaje o liga a otra liga
-	}
-	
 	// Getters y Setters
 	public String getNombre() {
 		return nombreLiga;
@@ -119,5 +115,4 @@ public class Liga extends Competidor {
 //		}
 		return sb.toString();
 	}
-	
 }
