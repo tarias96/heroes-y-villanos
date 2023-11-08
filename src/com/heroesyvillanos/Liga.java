@@ -29,9 +29,16 @@ public class Liga extends Competidor implements Comparable<Competidor> {
 			throw new Exception("Nombre invalido");
 		}
 		
+		for (Competidor c : competidores) {
+			if(c.tipoCompetidor != tipo) {
+				throw new Exception("No se puede agregar un personaje/liga a una liga con distintos tipos de competidor");
+			}
+		}
+		
 		this.tipoCompetidor = tipo;
 		this.nombreLiga = nombre;
 		this.competidores = competidores;
+		this.cache_promedio_caracteristicas = new HashMap<Caracteristica, Integer>();
 		
 		this.updateCacheCaracteristicas();
 	}

@@ -31,7 +31,11 @@ public abstract class Competidor implements Comparable<Competidor> {
 		return comp_1.getPromedioCaracteristica(c) - comp_2.getPromedioCaracteristica(c);
 	}
 	
-	public int esGanador(Competidor competidor, Caracteristica c) {
+	public int esGanador(Competidor competidor, Caracteristica c) throws Exception {
+		if(this.tipoCompetidor == competidor.tipoCompetidor) {
+			throw new Exception("No se pueden enfrentar competidores del mismo tipo");
+		}
+		
 		int pos = c.ordinal();
 		int len = Caracteristica.values().length;
 		Caracteristica carac_values[] = Caracteristica.values();
