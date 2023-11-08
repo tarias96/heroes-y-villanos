@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.Collections;
 
@@ -723,7 +722,7 @@ public class Juego {
     	}
     }
     
-	public void combatir(Competidor c1, Competidor c2, Caracteristica car) {
+	public void combatir(Competidor c1, Competidor c2, Caracteristica car) throws Exception {
 		// Toma dos competidores y una caracteristica
 		System.out.println("");
 		System.out.println("Combatiendo...");
@@ -849,7 +848,7 @@ public class Juego {
     	return null;
     }
     
-	private List<Competidor> obtenerVencedoresContra(Competidor retador, Caracteristica caracteristica) {
+	private List<Competidor> obtenerVencedoresContra(Competidor retador, Caracteristica caracteristica) throws Exception {
 		List<Competidor> contrincantes = new ArrayList<Competidor>();
 		List<Competidor> vencedores = new ArrayList<Competidor>();
 		
