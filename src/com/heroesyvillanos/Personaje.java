@@ -62,7 +62,7 @@ public class Personaje extends Competidor {
 	
 	@Override
 	public String toString() {
-		return nombre + ", " + nombreFantasia;
+		return "\"" + nombre + ", " + nombreFantasia + "\"";
 	}
 
 	public Map<Caracteristica, Integer> getCaracteristicas() {
