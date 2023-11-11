@@ -955,7 +955,7 @@ public class Juego {
 		if (criterios == null || criterios.isEmpty()) {
 			System.out.println("No se estableció un orden específico de características. Se utilizará el orden por defecto.");
 			criterios = new LinkedList<Caracteristica>();
-			criterios.addAll(new Ordenamiento().ordenCaracteristicas);
+			criterios.addAll(new Ordenamiento().getOrdenCaracteristicas());
 		}
 		List<Competidor> personajesOrdenados = new ArrayList<Competidor>();
 		Ordenamiento orden = new Ordenamiento();
