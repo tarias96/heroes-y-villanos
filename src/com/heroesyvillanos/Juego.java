@@ -129,7 +129,7 @@ public class Juego {
 	            	caract.put(Caracteristica.RESISTENCIA, 	Integer.valueOf(atributos[5].trim()));
 	            	caract.put(Caracteristica.DESTREZA, 	Integer.valueOf(atributos[6].trim()));
 	            	
-	            	if (atributos[0].equals("Héroe")) {
+	            	if (atributos[0].equals("Heroe")) {
 	            		heovi = TipoCompetidor.HEROE;
 	            	} else if (atributos[0].equals("Villano")) {
 	            		heovi = TipoCompetidor.VILLANO;
