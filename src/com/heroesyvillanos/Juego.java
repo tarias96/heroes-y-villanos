@@ -304,9 +304,8 @@ public class Juego {
             System.out.println("2. Creación");
             System.out.println("3. Listado");
             System.out.println("4. Guardar en archivo todas las ligas");
-            System.out.println("5. Agregar Personajes a Liga");
-            System.out.println("6. Agregar Liga a Liga");
-            System.out.println("7. Regresar al Menú Principal");
+            System.out.println("5. Agregar Competidores a Liga");
+            System.out.println("6. Regresar al Menú Principal");
             System.out.print("Seleccione una opción: ");
 
             int seleccion = scanner.nextInt();
@@ -340,14 +339,10 @@ public class Juego {
 					}
                     break;
                 case 5:
-                	scanner.nextLine();
-                	agregaCompetidorALiga(1); // Agrega personaje
+                	scanner.nextLine();          
+                	ingresaNombreLigaAgregaCompetidor(); 
                     break;
                 case 6:
-                	scanner.nextLine();
-                	agregaCompetidorALiga(2); // Agrega Liga
-                    break;
-                case 7:
                     seguir = false;
                     break;
                 default:
@@ -420,19 +415,19 @@ public class Juego {
 	
 	private boolean existeLigaEnMemoria(String s) {
 		for(int i=0;i<ligas.size();i++)	{
-			if(ligas.get(i).getNombreLiga().contains(s))
+			if(ligas.get(i).getNombreLiga().equalsIgnoreCase(s))
 				return true;
 		}
 		return false;
 	}
 	
-	public void crearLiga() {
+	public void crearLiga() throws Exception{
 		System.out.println("");
 		System.out.println("Creando liga...");
 		String nombreLiga;
 		boolean valido, seguir;
 		TipoCompetidor tipoLiga;
-		int indexLiga, opcion;
+		int indexLiga;
 		scanner.nextLine();
 
 		do {
@@ -465,10 +460,38 @@ public class Juego {
 		indexLiga = ligas.size() - 1;
 
 		// AGREGO PERSONAJE O LIGA
+		seleccionaCompetidorAAgregar(indexLiga);
+	}
+	
+	private void ingresaNombreLigaAgregaCompetidor() throws Exception{
+		// INGRESO NOMBRE de LIGA a agregar competidores
+		boolean seguir=true;
+		int indiceLigaAgregar;
+		
+		this.listarLigas();
+
+		System.out.println("Ingrese el numero de liga al que desea agregar competidores: ");
+		indiceLigaAgregar = scanner.nextInt();
 
 		do {
+			if (indiceLigaAgregar > 0 && indiceLigaAgregar <= ligas.size()) 
+				seguir=false;
+			else {
+				System.out.println("Opcion incorrecta, ingrese una valida: ");
+				indiceLigaAgregar = scanner.nextInt();
+				seguir=true;
+			}
+		}while(seguir);
+		
+			seleccionaCompetidorAAgregar(indiceLigaAgregar-1);
+	}
+	
+	private void seleccionaCompetidorAAgregar(int indexLiga)  throws Exception{
+		int opcion;
+		boolean seguir;
+		do {
 			seguir = false;
-			System.out.println("AGREGAR COMPETIDORES A LA LIGA...... '" + nombreLiga + "'....... ");
+			System.out.println("AGREGAR COMPETIDORES A LA LIGA...... '" + ligas.get(indexLiga).getNombre() + "'....... ");
 			System.out.println(" 1. Agregar un Personaje");
 			System.out.println(" 2. Agregar una Liga");
 			System.out.println(" 3. Volver al menu de Ligas: ");
@@ -505,80 +528,64 @@ public class Juego {
 		} while (seguir);
 	}
 	
-	private void agregaCompetidorALiga(int opcion) {
-		String nombreLiga;
-		int i;
+	private void agregaPersonajeALiga(int indexLiga) throws Exception {
+		boolean seguir=true;
+		int indicePersonaje;
 		
-		// INGRESO NOMBRE de LIGA
-		System.out.print("Ingrese nombre de la Liga para agregar Competidores: ");
-		nombreLiga = scanner.nextLine();
-
-		if (!validaCadena(nombreLiga) || !existeLigaEnMemoria(nombreLiga)) {
-			System.out.print("El nombre de Liga ingresado no es valido o no existe... ");
-		}
-		else {
-			for(i=0; i < this.ligas.size(); i++) {
-				if(ligas.get(i).getNombreLiga().equalsIgnoreCase(nombreLiga))
-					break;
+		this.listarPersonajes();
+		System.out.println("Ingrese el numero de personaje que desea agregar: ");
+		indicePersonaje = scanner.nextInt();
+		
+		do {
+			if(indicePersonaje > 0 && indicePersonaje <= personajes.size() ) {
+					try {
+						ligas.get(indexLiga).agregarCompetidorALiga(personajes.get(indicePersonaje-1));
+						System.out.println("Personaje CARGADO CORRECTAMENTE A LA LIGA");
+					} catch (Exception E) {
+						System.out.println(E.getMessage());
+					}
+					seguir=false;
 			}
-			
-			if(opcion==1)
-				agregaPersonajeALiga(i);
-			else
-				agregaLigaALiga(i);
-		}
+			else {
+				System.out.println("Opcion incorrecta, ingrese una valida: ");
+				indicePersonaje = scanner.nextInt();
+				seguir=true;
+			}
+		}while(seguir);
 	}
 	
-	private void agregaPersonajeALiga(int indexLiga) {
-		String nombreFantasia;
-		boolean seguir;
-		int aux = 0;
-		System.out.println("Ingrese nombre de Personaje: ");
-		nombreFantasia = scanner.nextLine();
-		seguir = true;
-		
-		while (seguir && aux < personajes.size()) {
-			if (personajes.get(aux).getNombreFantasia().equalsIgnoreCase(nombreFantasia)) {
-				try {
-					ligas.get(indexLiga).agregarCompetidorALiga(personajes.get(aux));
-					System.out.println("Personaje CARGADO CORRECTAMENTE A LA LIGA");
-				} catch (Exception E) {
-					System.out.println(E.getMessage());
+	private void agregaLigaALiga(int indexLiga) throws Exception {
+		boolean seguir=true;
+		int indiceLigaAgregar;
+    
+		this.listarLigas();
+		System.out.println("Ingrese el numero de liga que desea agregar: ");
+		indiceLigaAgregar = scanner.nextInt();
+
+		do {
+			if (indiceLigaAgregar > 0 && indiceLigaAgregar <= ligas.size()) {
+				seguir=false;
+				if (!ligas.get(indiceLigaAgregar-1).getCompetidores().contains(ligas.get(indexLiga))) { // evita que la liga
+																										// entre en una liga
+																										// que forma parte de
+																										// ella
+					try {
+						ligas.get(indexLiga).agregarCompetidorALiga(ligas.get(indiceLigaAgregar-1));
+						System.out.println("Liga CARGADA CORRECTAMENTE");
+					} catch (Exception E) {
+						System.out.println(E.getMessage());
+					}
+					
 				}
-				seguir = false;
+				else
+					System.out.println("Liga no valida.");
 			}
-			else
-				aux++;
-		}
-		
-		if(seguir)
-			System.out.println("No se encuentra el personaje...");
-	}
-	
-	private void agregaLigaALiga(int indexLiga) {
-		String nombreLiga;
-		boolean seguir;
-		int aux = 0;
-
-		System.out.println("Ingrese nombre de Liga: ");
-		nombreLiga = scanner.nextLine();
-		seguir = true;
-
-		while (seguir & aux < ligas.size()) {
-			if (ligas.get(aux).getNombreLiga().equalsIgnoreCase(nombreLiga)) {
-				try {
-					ligas.get(indexLiga).agregarCompetidorALiga(ligas.get(aux));
-					System.out.println("Liga CARGADA CORRECTAMENTE");
-
-				} catch (Exception E) {
-					System.out.println(E.getMessage());
-				}
-				seguir = false;
-			} else
-				aux++;
-		}
-		if (seguir)
-			System.out.println("No se encuentra la Liga... ");
+			else {
+				System.out.println("Opcion incorrecta, ingrese una valida: ");
+				indiceLigaAgregar = scanner.nextInt();
+				seguir=true;
+			}
+		}while(seguir);
 	}
 	
 	public void listarLigas() throws Exception{
